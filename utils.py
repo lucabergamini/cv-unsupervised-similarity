@@ -40,7 +40,47 @@ def emd_from_hist(hist_1, hist_2):
         emds[i] = emd(hist_1[i].astype("float64"), hist_2[i].astype("float64"), matrix)
     return emds
 
-# def get_hog(img,cell_number):
+def get_sift(img,n_sift,edge_t=5):
+    """
+    funzione di comodo cosi non diventiamo scemi con i parametri e con le chiamate
+    ritorna n_sift descriptors(se li trova) usando edge_t come soglia per corner harris
+    :param img: immagine
+    :param n_sift: numero feature(ognuna 128 float)
+    :param edge_t: soglia inversa(piu e bassa meno roba trova)
+    :return:
+    """
+    # nfeatures 0 per avere tutto
+    # posso scegliere le viste per ottava ma non il numero di ottave
+    # contrast per prendere solo i massimi con un certo valore(espansione taylor)
+    # edge per valore rapporto in Harris, se e alto uno dei due derivate e piu alta e quindi edge e non corner
+    sift = cv2.xfeatures2d.SIFT_create(nfeatures=n_sift, nOctaveLayers=3, contrastThreshold=0.08, edgeThreshold=edge_t,
+                                       sigma=1.6)
+
+    keypoints,descriptor = sift.detectAndCompute(img,mask=None)
+    return descriptor
+
+
+def sift_match(features_1,features_2):
+    """
+    2NN-sift-match tra due immagini usando criterio del paper
+    :param features_1: features immagine 1 segnata come query
+    :param features_2: features immagine 2 segnata come train(non si sa perche)
+    :return: numpy array con indici e distanze di quei match che superano la soglia
+    """
+    #distanza L2
+    bf = cv2.BFMatcher(crossCheck=False)
+    # due match per ognunno
+    matches = bf.knnMatch(features_1, features_2, k=2)
+    matches_array = []
+    for match_1, match_2 in matches:
+        if match_1.distance >= 0.75 * match_2.distance:
+            continue
+        #trovato match
+        matches_array.append((match_1.queryIdx,match_1.trainIdx,match_1.distance))
+    #torno come float per distanza,ma gli indici vogliono int
+    return numpy.asarray(matches_array,dtype="float32")
+
+    # def get_hog(img,cell_number):
 #     """
 #     hog di skimage
 #     :param img: immagine BGR
