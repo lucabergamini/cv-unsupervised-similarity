@@ -3,6 +3,7 @@ Similarity between images using CV techniques
 
 ## TODO:
 
+* Write Python 3-Compatible Code
 * HIST con EMD
 * HOG
 * SIFT

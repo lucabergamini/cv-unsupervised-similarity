@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 import cv2
 from skimage.feature import hog
 import numpy
@@ -13,7 +14,7 @@ def get_bgr_hist(img, bins, normalize_channel=False):
     :return: hist, se bin= 40->40*3 = 120
     """
     h_final = numpy.zeros((3, bins), dtype="float32")
-    for i in xrange(3):
+    for i in numpy.arange(3):
         h = cv2.calcHist([img], channels=[i], histSize=[bins], mask=None, ranges=[0, 256])
         if normalize_channel:
             h /= numpy.sum(h)
@@ -35,7 +36,7 @@ def emd_from_hist(hist_1, hist_2):
     # TODO definiscila!
     matrix = numpy.ones((hist_1.shape[1], hist_1.shape[1]), dtype="float64")
     emds = numpy.zeros(hist_1.shape[0])
-    for i in xrange(len(emds)):
+    for i in numpy.arange(len(emds)):
         emds[i] = emd(hist_1[i].astype("float64"), hist_2[i].astype("float64"), matrix)
     return emds
 
