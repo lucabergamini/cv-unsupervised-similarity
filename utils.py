@@ -40,6 +40,7 @@ def emd_from_hist(hist_1, hist_2):
         emds[i] = emd(hist_1[i].astype("float64"), hist_2[i].astype("float64"), matrix)
     return emds
 
+
 def get_sift(img,n_sift,edge_t=5):
     """
     funzione di comodo cosi non diventiamo scemi con i parametri e con le chiamate

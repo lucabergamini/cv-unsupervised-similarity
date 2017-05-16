@@ -13,6 +13,6 @@ print(emd_from_hist(h1,h2))
 
 s_1 = get_sift(cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY),50)
 s_2 = get_sift(cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY),50)
-print sift_match(s_1,s_2)
+print(sift_match(s_1,s_2))
 
 
