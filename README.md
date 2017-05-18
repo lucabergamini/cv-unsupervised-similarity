@@ -13,6 +13,8 @@ Similarity between images using CV techniques
 
 - [x] hist
 - [x] EMD
+- [x] SIFT
+- [x] BOW
 - [ ] HOG
 - [ ] caricamento immagini
 - [ ] memorizzazione vettori features
@@ -20,7 +22,7 @@ Similarity between images using CV techniques
 
 ## EMD
 
-ha il vantaggio di poter specificare una matrice di distanza, che però va costruita in numpy e deve essere simmetrica (ovviamente.
+ha il vantaggio di poter specificare una matrice di distanza, che però va costruita in numpy e deve essere simmetrica (ovviamente).
 
 ## HOG
 
@@ -28,7 +30,7 @@ non sono ancora riuscito a farmi dare un feature vector lungo sempre uguale, com
 
 ## SIFT
 
-Here be Dragons
+molto buono perchè invariante, possiamo usarle cosi come sono o come BOW(gia wrappato)
 
 ## SIAMESI
 
