@@ -79,6 +79,40 @@ def sift_match(features_1,features_2):
     #torno come float per distanza,ma gli indici vogliono int
     return numpy.asarray(matches_array,dtype="float32")
 
+def get_BOW_vocabulary(sift_features, cluster_number):
+    """
+    date le features di un training set le aggrega in cluster_number cluster(k-means) e resituisce i centroidi
+    perche ho fatto questa funzione? bella domanda mio giovane padawan
+    il motivo risiede nella lentezza del calcolo dei centri cluster
+    il vocabolario puo essere salvato cosi da chiamare questa funzione solo una volta
+    :param sift_features: feature sift come numpy array(n_feature,128)
+    :param cluster_number: numero cluster
+    :return: vocabolario, cioe array(cluster_number,128)
+    """
+
+    bow = cv2.BOWKMeansTrainer(clusterCount=cluster_number)
+    for sift in sift_features:
+        bow.add(sift)
+    vocabulary = bow.cluster()
+    return vocabulary
+
+def get_BOW_hist(sift_features,vocabulary):
+    """
+    histogramma delle feature sift di una immagine usando la distanza con il vocabulary
+    :param sift_features: vettore features di una immagine
+    :param vocabulary: vocabolario features
+    :return: histogramma array(cluster_number)
+    """
+    hist = numpy.zeros(len(vocabulary),dtype="float32")
+    for sift in sift_features:
+        #calcolo distanze euclide con vocabolario
+        dist = numpy.linalg.norm(vocabulary-sift,axis=1)
+        #assegno alla minore la sift incrementando hist
+        hist[numpy.argmin(dist)] +=1
+    #normalizzo dividendo per numero di sift
+    hist/=len(sift_features)
+    return hist
+
     # def get_hog(img,cell_number):
 #     """
 #     hog di skimage
