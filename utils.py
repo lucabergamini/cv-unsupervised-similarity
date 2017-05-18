@@ -41,7 +41,7 @@ def emd_from_hist(hist_1, hist_2):
     return emds
 
 
-def get_sift(img,n_sift,edge_t=5):
+def get_sift(img, n_sift, edge_t=5):
     """
     funzione di comodo cosi non diventiamo scemi con i parametri e con le chiamate
     ritorna n_sift descriptors(se li trova) usando edge_t come soglia per corner harris
@@ -57,18 +57,18 @@ def get_sift(img,n_sift,edge_t=5):
     sift = cv2.xfeatures2d.SIFT_create(nfeatures=n_sift, nOctaveLayers=3, contrastThreshold=0.08, edgeThreshold=edge_t,
                                        sigma=1.6)
 
-    keypoints,descriptor = sift.detectAndCompute(img,mask=None)
+    keypoints, descriptor = sift.detectAndCompute(img, mask=None)
     return descriptor
 
 
-def sift_match(features_1,features_2):
+def sift_match(features_1, features_2):
     """
     2NN-sift-match tra due immagini usando criterio del paper
     :param features_1: features immagine 1 segnata come query
     :param features_2: features immagine 2 segnata come train(non si sa perche)
     :return: numpy array con indici e distanze di quei match che superano la soglia
     """
-    #distanza L2
+    # distanza L2
     bf = cv2.BFMatcher(crossCheck=False)
     # due match per ognunno
     matches = bf.knnMatch(features_1, features_2, k=2)
@@ -76,10 +76,11 @@ def sift_match(features_1,features_2):
     for match_1, match_2 in matches:
         if match_1.distance >= 0.75 * match_2.distance:
             continue
-        #trovato match
-        matches_array.append((match_1.queryIdx,match_1.trainIdx,match_1.distance))
-    #torno come float per distanza,ma gli indici vogliono int
-    return numpy.asarray(matches_array,dtype="float32")
+        # trovato match
+        matches_array.append((match_1.queryIdx, match_1.trainIdx, match_1.distance))
+    # torno come float per distanza,ma gli indici vogliono int
+    return numpy.asarray(matches_array, dtype="float32")
+
 
 def get_BOW_vocabulary(sift_features, cluster_number):
     """
@@ -98,24 +99,26 @@ def get_BOW_vocabulary(sift_features, cluster_number):
     vocabulary = bow.cluster()
     return vocabulary
 
-def get_BOW_hist(sift_features,vocabulary):
+
+def get_BOW_hist(sift_features, vocabulary):
     """
     histogramma delle feature sift di una immagine usando la distanza con il vocabulary
     :param sift_features: vettore features di una immagine
     :param vocabulary: vocabolario features
     :return: histogramma array(cluster_number)
     """
-    hist = numpy.zeros(len(vocabulary),dtype="float32")
+    hist = numpy.zeros(len(vocabulary), dtype="float32")
     for sift in sift_features:
-        #calcolo distanze euclide con vocabolario
-        dist = numpy.linalg.norm(vocabulary-sift,axis=1)
-        #assegno alla minore la sift incrementando hist
-        hist[numpy.argmin(dist)] +=1
-    #normalizzo dividendo per numero di sift
-    hist/=len(sift_features)
+        # calcolo distanze euclide con vocabolario
+        dist = numpy.linalg.norm(vocabulary - sift, axis=1)
+        # assegno alla minore la sift incrementando hist
+        hist[numpy.argmin(dist)] += 1
+    # normalizzo dividendo per numero di sift
+    hist /= len(sift_features)
     return hist
 
     # def get_hog(img,cell_number):
+
 #     """
 #     hog di skimage
 #     :param img: immagine BGR
