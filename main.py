@@ -16,8 +16,8 @@ s_2 = get_sift(cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY),50)
 print(sift_match(s_1,s_2))
 
 voc = get_BOW_vocabulary([s_1,s_2],cluster_number=10)
-print voc
+print(voc)
 hist = get_BOW_hist(s_1,voc)
-print hist
+print(hist)
 
 
