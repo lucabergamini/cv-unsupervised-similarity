@@ -1,6 +1,6 @@
 from __future__ import print_function, division
 import cv2
-from skimage.feature import hog
+#from skimage.feature import hog
 import numpy
 from pyemd.emd import emd
 
@@ -21,20 +21,33 @@ def get_bgr_hist(img, bins, normalize_channel=False):
         h_final[i] = numpy.squeeze(h)
     return h_final
 
+def get_emd_matrix(bins):
+    """
+    genera matrice dato il numero di bins    
+    :param bins: numero bin hist
+    :param method: funzione numpy da applicare
+    :return: matrice
+    """
+    matrix = numpy.zeros((bins,bins))
+    for i in xrange(bins):
+        matrix[i,i:] = numpy.arange(0,bins-i)
+        matrix[i,0:i] = numpy.abs(numpy.arange(-i,0))
 
-def emd_from_hist(hist_1, hist_2):
+    return matrix
+
+def emd_from_hist(hist_1, hist_2,matrix):
     """
     earth mover distances tra due istogrammi BGR
     se matrice a 1 viene simile a batacharia
     :param hist_1:
     :param hist_2:
+    :param matrix: matrice simmetrica distanze
     :return: 3 distanze(una per ogni canale colore)
     """
     assert hist_1.shape == hist_2.shape
     # matrice simmetrica per le distanze
     # e il costo di spostare dal bin i al bin j
-    # TODO definiscila!
-    matrix = numpy.ones((hist_1.shape[1], hist_1.shape[1]), dtype="float64")
+    matrix = matrix.astype("float64")
     emds = numpy.zeros(hist_1.shape[0])
     for i in numpy.arange(len(emds)):
         emds[i] = emd(hist_1[i].astype("float64"), hist_2[i].astype("float64"), matrix)
@@ -54,10 +67,10 @@ def get_sift(img, n_sift, edge_t=5):
     # posso scegliere le viste per ottava ma non il numero di ottave
     # contrast per prendere solo i massimi con un certo valore(espansione taylor)
     # edge per valore rapporto in Harris, se e alto uno dei due derivate e piu alta e quindi edge e non corner
-    sift = cv2.xfeatures2d.SIFT_create(nfeatures=n_sift, nOctaveLayers=3, contrastThreshold=0.08, edgeThreshold=edge_t,
+    sift = cv2.xfeatures2d.SIFT_create(nfeatures=n_sift, nOctaveLayers=5, contrastThreshold=0.08, edgeThreshold=edge_t,
                                        sigma=1.6)
 
-    keypoints, descriptor = sift.detectAndCompute(img, mask=None)
+    keypoints, descriptor = sift.detectAndCompute(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), mask=None)
     return descriptor
 
 

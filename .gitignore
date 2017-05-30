@@ -101,6 +101,6 @@ ENV/
 .mypy_cache/
 
 data/
-processed(
+processed/
 models/
 .idea/
