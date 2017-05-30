@@ -15,11 +15,14 @@ Similarity between images using CV techniques
 - [x] EMD
 - [x] SIFT
 - [x] BOW
-- [ ] HOG
+- [x] HOG
 - [ ] caricamento immagini
 - [ ] memorizzazione vettori features
 - [ ] normalizzazione immagini?
 
+## RESULTS:
+
+* BOW con SIFT fa schifo
 ## EMD
 
 ha il vantaggio di poter specificare una matrice di distanza, che però va costruita in numpy e deve essere simmetrica (ovviamente).
