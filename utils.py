@@ -5,21 +5,73 @@ import numpy
 from pyemd.emd import emd
 
 
-def get_bgr_hist(img, bins, normalize_channel=False):
+def get_mask(img):
     """
-    hist BGR concatenato(in questo ordine) con bin per ogni canale
+    get mask for the image
+    :param img: 
+    :return: list of maskes
+    """
+    maskes = []
+    # convert the image to the HSV color space and initialize
+    # the features used to quantify the image
+
+    # grab the dimensions and compute the center of the image
+    (h, w) = img.shape[:2]
+    (cX, cY) = (int(w * 0.5), int(h * 0.5))
+
+    # divide the image into four rectangles/segments (top-left,
+    # top-right, bottom-right, bottom-left)
+    segments = [(0, cX, 0, cY), (cX, w, 0, cY), (cX, w, cY, h),
+                (0, cX, cY, h)]
+
+    # construct an elliptical mask representing the center of the
+    # image
+    (axesX, axesY) = (int(w * 0.75) // 2, int(h * 0.75) // 2)
+    ellipMask = numpy.zeros(img.shape[:2], dtype="uint8")
+    cv2.ellipse(ellipMask, (cX, cY), (axesX, axesY), 0, 0, 360, 255, -1)
+
+    # loop over the segments
+    for (startX, endX, startY, endY) in segments:
+        # construct a mask for each corner of the image, subtracting
+        # the elliptical center from it
+        cornerMask = numpy.zeros(img.shape[:2], dtype="uint8")
+        cv2.rectangle(cornerMask, (startX, startY), (endX, endY), 255, -1)
+        cornerMask = cv2.subtract(cornerMask, ellipMask)
+        maskes.append(cornerMask)
+    maskes.append(ellipMask)
+    return maskes
+
+
+def get_color_hist(img, bins, mode="bgr", normalize_channel=False, mask=None):
+    """
+    hist BGR o HSV concatenato(in questo ordine) con bin per ogni canale
     :param img: immagine BGR
+    :param mode: se BGR o HSV
     :param bins: numero bin di ogni canale
     :param normalize_channel: se normalizzare il canale
     :return: hist, se bin= 40->40*3 = 120
     """
-    h_final = numpy.zeros((3, bins), dtype="float32")
-    for i in numpy.arange(3):
-        h = cv2.calcHist([img], channels=[i], histSize=[bins], mask=None, ranges=[0, 256])
-        if normalize_channel:
-            h /= numpy.sum(h)
-        h_final[i] = numpy.squeeze(h)
-    return h_final
+
+    h_area = numpy.zeros((3, bins), dtype="float32")
+    assert mode in ["bgr", "hsv"]
+    if mode == "bgr":
+        for i in numpy.arange(3):
+            h = cv2.calcHist([img], channels=[i], histSize=[bins], mask=mask, ranges=[0, 256])
+            if normalize_channel:
+                h /= numpy.sum(h)
+            h_area[i] = numpy.squeeze(h)
+    else:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        for i in numpy.arange(3):
+            if i == 0:
+                h = cv2.calcHist([img], channels=[i], histSize=[bins], mask=mask, ranges=[0, 180])
+            else:
+                h = cv2.calcHist([img], channels=[i], histSize=[bins], mask=mask, ranges=[0, 256])
+
+            if normalize_channel:
+                h /= numpy.sum(h)
+            h_area[i] = numpy.squeeze(h)
+        return h_area
 
 def get_emd_matrix(bins):
     """
