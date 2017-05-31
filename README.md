@@ -23,6 +23,7 @@ Similarity between images using CV techniques
 ## RESULTS:
 
 * BOW con SIFT fa schifo
+* BOW con SIFT e hist BGR o HSV calcolato su 5 parti dell'immagine (Graziano) con distanza EMD fa ancora piu schifo
 ## EMD
 
 ha il vantaggio di poter specificare una matrice di distanza, che però va costruita in numpy e deve essere simmetrica (ovviamente).
