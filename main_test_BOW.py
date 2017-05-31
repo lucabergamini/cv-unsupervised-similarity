@@ -5,7 +5,7 @@ from utils import *
 from matplotlib import pyplot
 
 #carico data
-data = numpy.load("bow_75_1500.npy").item()
+data = numpy.load("bow_50_1500.npy").item()
 
 #prendo tutti istogrammi per ricerche
 hists_sift = numpy.asarray([i["hist_sift"] for i in data["img_data"]])

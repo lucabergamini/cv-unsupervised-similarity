@@ -5,7 +5,7 @@ import os
 SIFT_NUMBER = 50
 CLUSTER_NUMBER = 1500
 COLOR_BINS = 8
-COLOR_SPACE = "bgr"
+COLOR_SPACE = "hsv"
 #carico lista di immagini
 BASE_FOLDER = "data/"
 SUB_FOLDERS = [BASE_FOLDER+i+"/" for i in os.listdir(BASE_FOLDER)]
