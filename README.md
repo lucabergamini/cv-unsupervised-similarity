@@ -25,6 +25,7 @@ Similarity between images using CV techniques
 * BOW con SIFT fa schifo
 * BOW con SIFT e hist HSV calcolato su 5 parti dell'immagine (Graziano) con distanza EMD fa ancora piu schifo
 * BOW con SIFT e hist BGR calcolato su 5 parti dell'immagine (Graziano) con distanza EMD non va proprio(sempre stessa immagine)
+* il mio nome vicino ad "ancora più schifo" mi fa sentire bene <3
 
 ## EMD
 
