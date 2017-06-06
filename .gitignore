@@ -104,3 +104,4 @@ data/
 processed/
 models/
 .idea/
+.DS_Store
