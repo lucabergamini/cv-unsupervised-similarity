@@ -3,7 +3,7 @@ import cv2
 #from skimage.feature import hog
 import numpy
 from pyemd.emd import emd
-
+from matplotlib import pyplot
 
 def get_mask(img):
     """
@@ -182,15 +182,18 @@ def get_BOW_hist(sift_features, vocabulary):
     hist /= len(sift_features)
     return hist
 
-    # def get_hog(img,cell_number):
 
-#     """
-#     hog di skimage
-#     :param img: immagine BGR
-#     :param cell_number: numero di celle sulle due dimensioni
-#     :return:
-#     """
-#     img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-#     pixel_per_cell = (img.shape[0]/cell_number[0],img.shape[1]/cell_number[1])
-#     print img.shape
-#     return hog(image=img,orientations=9,pixels_per_cell=pixel_per_cell,cells_per_block=(4,4),block_norm="L2",visualise=True)
+def show_results(img, results):
+    """
+    Plots the comparing image together with the results, 4 per row.
+    :param img: the image to be compared with results
+    :param results: images resulting from retrieval
+    :return:
+    """
+    rows = int(numpy.ceil(len(results) / 4))
+    pyplot.subplot2grid((rows, 6), (0, 0), rowspan=2, colspan=2)
+    pyplot.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+    for i in range(len(results)):
+        pyplot.subplot2grid((rows, 6), (i // 4, 2 + (i % 4)))
+        pyplot.imshow(cv2.cvtColor(results[i], cv2.COLOR_BGR2RGB), cmap='gray')
