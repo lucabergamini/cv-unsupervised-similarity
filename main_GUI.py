@@ -87,6 +87,7 @@ def onButtonPress(event):
         # prendo 5 indice piu alto
         indexes_class = numpy.squeeze(numpy.argsort(feat, axis=-1))[-5:]
         # fill distanze
+        # TODO qualcuno sistemi questo vi prego
         dists = 1000 + numpy.linalg.norm(feat - feats, axis=-1)
 
         # non ho trovato un modo di farlo senza for
@@ -102,6 +103,7 @@ def onButtonPress(event):
         # prendo 5 indice piu alto
         indexes_class = numpy.squeeze(numpy.argsort(feat, axis=-1))[-5:]
         # fill distanze
+        #TODO qualcuno sistemi questo vi prego
         dists = 1000 + numpy.linalg.norm(feat - feats, axis=-1)
 
         # non ho trovato un modo di farlo senza for
@@ -117,6 +119,7 @@ def onButtonPress(event):
         # prendo 5 indice piu alto
         indexes_class = numpy.squeeze(numpy.argsort(feat, axis=-1))[-5:]
         # fill distanze
+        #TODO qualcuno sistemi questo vi prego
         dists = 1000 + numpy.linalg.norm(feat - feats, axis=-1)
 
         # non ho trovato un modo di farlo senza for
