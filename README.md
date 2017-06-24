@@ -8,6 +8,7 @@ Similarity between images using CV techniques
 * HOG
 * SIFT
 * reti siamesi?
+* il testing va fatto rispetto alla cartella di train!
 
 ## TASKS:
 
