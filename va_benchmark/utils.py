@@ -1,8 +1,11 @@
 import numpy
 from pyemd.emd import emd
 import cv2
+import scipy
+from scipy import spatial
+
 #data = numpy.load("../cv-unsupervised-similarity/bow_50_1500.npy").item()
-data = numpy.load("../test_data.npy").item()
+data = numpy.load("../bow_50_1500.npy").item()
 
 #prendo tutti istogrammi per ricerche
 hists_sift = numpy.asarray([i["hist_sift"] for i in data["img_data"]])
@@ -50,7 +53,11 @@ matrix = get_emd_matrix(bins=8)
 def HistSift(dictionary):
     feat = dictionary["hist_sift"]
     feats = hists_sift
-    dists = numpy.linalg.norm(feat - feats, axis=1)
+    #dists = numpy.linalg.norm(feat - feats, axis=1)
+    dists = []
+    for f in feats:
+        dists.append(numpy.abs(spatial.distance.cosine(feat, f)))
+    dists = numpy.asarray(dists)
     return dists
 
 def HistColor(dictionary):

@@ -17,7 +17,7 @@ def read_class(filename):
 
     return ret
 
-train_class = read_class('test_list.txt')
+train_class = read_class('train_list.txt')
 test_class = read_class('test_list.txt')
 
 def eval_map(prediction_folder):
@@ -52,8 +52,8 @@ def eval_map(prediction_folder):
 
         # for each result
         for res in sorted_list:
-            count += 1
             try:
+                count += 1
                 if train_class[res] == cl:  # true positive
                     tp += 1
                     precisions.append(tp / count)
@@ -73,7 +73,7 @@ def eval_map(prediction_folder):
     return maps
 
 models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl',]
-models = ['hist_sift']
+#models = ['hist_sift']
 
 if __name__ == '__main__':
     text = ''
@@ -97,7 +97,6 @@ if __name__ == '__main__':
             print e.message
             # sad print
             print maps
-
     with open('FINAL_RESULT.txt', 'w') as file:
         file.write(text)
 

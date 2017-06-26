@@ -13,20 +13,15 @@ from utils import *
 
 models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl',]
 # folder of the train corpus
-#corpus_folder = '../cv-unsupervised-similarity/data/'
-#corpus_list = [basename(f) for f in glob(join(corpus_folder, '**', '*.jpg'))]
-
-corpus_folder = 'test'
-corpus_list = [basename(f) for f in glob(join(corpus_folder, '*.jpg'))]
+corpus_folder = '../cv-unsupervised-similarity/data/'
+corpus_list = [basename(f) for f in glob(join(corpus_folder, '**', '*.jpg'))]
 
 # folder of the test set
 test_folder = 'test'
-#test_folder = '../cv-unsupervised-similarity/data/'
 test_list = [basename(f) for f in glob(join(test_folder, '*.jpg'))]
 
-
-#data = numpy.load("../cv-unsupervised-similarity/bow_50_1500.npy").item()
-data = numpy.load("../test_data.npy").item()
+data = numpy.load("../bow_50_1500.npy").item()
+data_test = numpy.load("../test_data.npy").item()
 
 def predict(image, prediction_folder,model):
     """
@@ -37,10 +32,9 @@ def predict(image, prediction_folder,model):
     """
     # perform whatever prediction
     shuffle(corpus_list)
-    # ADDED ___________________________________-
     dictionary = None
     #print image
-    for dictionary_t in data["img_data"]:
+    for dictionary_t in data_test["img_data"]:
         #print dictionary_t["img"]
         if image in dictionary_t["img"]:
             dictionary = dictionary_t
@@ -72,9 +66,9 @@ def predict(image, prediction_folder,model):
     if model == 'vgg19_cl':
         dists = Vgg19Class(dictionary)
 
-    indexes = numpy.argsort(dists)[0:9]
+
+    indexes = numpy.argsort(dists)
     imgs = [data["img_data"][j]["img"].split('/')[-1] for j in indexes]
-    # ADDED ___________________________________-
 
     # write to file
     with open(join(prediction_folder, image + '.txt'), mode='w') as f:
@@ -83,7 +77,6 @@ def predict(image, prediction_folder,model):
 
 # entry point
 if __name__ == '__main__':
-
     # run predictions
     for model in models:
         prediction_folder = 'predictions_'+model
