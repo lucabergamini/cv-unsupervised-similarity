@@ -11,7 +11,7 @@ import numpy
 from random import shuffle
 from utils import *
 
-models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl',]
+models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl','inception_resnet_v2','inception_resnet_v2_cl']
 # folder of the train corpus
 corpus_folder = '../cv-unsupervised-similarity/data/'
 corpus_list = [basename(f) for f in glob(join(corpus_folder, '**', '*.jpg'))]
@@ -57,6 +57,9 @@ def predict(image, prediction_folder,model):
     if model == 'vgg19':
         dists = Vgg19(dictionary)
 
+    if model == 'inception_resnet_v2':
+        dists = InceptionResnetV2(dictionary)
+
     if model == 'resnet50_cl':
         dists = ResNet50Class(dictionary)
 
@@ -65,6 +68,9 @@ def predict(image, prediction_folder,model):
 
     if model == 'vgg19_cl':
         dists = Vgg19Class(dictionary)
+
+    if model == 'inception_resnet_v2_cl':
+        dists = InceptionResnetV2Class(dictionary)
 
 
     indexes = numpy.argsort(dists)

@@ -46,18 +46,22 @@ def eval_map(prediction_folder):
         except:
             print 'immagine non trovata durante la predizione'
             continue
-        count = 0.
+        count = 1.
         tp = 0.
         precisions = []
 
         # for each result
         for res in sorted_list:
             try:
-                count += 1
                 if train_class[res] == cl:  # true positive
                     tp += 1
                     precisions.append(tp / count)
-            except:
+                # Il count va messo qui (dopo la riga che puo' far scattare l'eccezione, cioe' quella con
+                # train_class[res]) altrimenti si incrementa il contatore anche quando la riga contiene un'immagine che
+                # non e' presente nel training set fornito da Davide, diminuendo la MAP.
+                # Di conseguenza count parte da 1. invece che da 0.
+                count += 1
+            except KeyError:
                 print 'non ho {} nella train list'.format(res)
         assert len(precisions) == tp
 
@@ -72,7 +76,7 @@ def eval_map(prediction_folder):
     maps = {key: sum(value)/len(value) for key, value in aps.iteritems()}
     return maps
 
-models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl',]
+models = ['hist_sift','hist_color','resnet50','vgg16','vgg19','resnet50_cl','vgg16_cl','vgg19_cl','inception_resnet_v2','inception_resnet_v2_cl']
 #models = ['hist_sift']
 
 if __name__ == '__main__':

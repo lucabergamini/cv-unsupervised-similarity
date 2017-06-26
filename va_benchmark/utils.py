@@ -13,9 +13,11 @@ hists_colors = numpy.asarray([i["hist_color"] for i in data["img_data"]])
 resnet_feature = numpy.squeeze(numpy.asarray([i["resnet50"] for i in data["img_data"]]))
 vgg16_feature = numpy.squeeze(numpy.asarray([i["vgg16"] for i in data["img_data"]]))
 vgg19_feature = numpy.squeeze(numpy.asarray([i["vgg19"] for i in data["img_data"]]))
+inception_resnet_v2_feature = numpy.squeeze(numpy.asarray([i["inception_resnet_v2"] for i in data["img_data"]]))
 resnet_class_feature = numpy.squeeze(numpy.asarray([i["resnet50_cl"] for i in data["img_data"]]))
 vgg16_class_feature = numpy.squeeze(numpy.asarray([i["vgg16_cl"] for i in data["img_data"]]))
 vgg19_class_feature = numpy.squeeze(numpy.asarray([i["vgg19_cl"] for i in data["img_data"]]))
+inception_resnet_v2_class_feature = numpy.squeeze(numpy.asarray([i["inception_resnet_v2_cl"] for i in data["img_data"]]))
 
 def get_emd_matrix(bins):
     """
@@ -109,6 +111,12 @@ def Vgg19(dictionary):
     dists = numpy.linalg.norm(feat - feats, axis=-1)
     return dists
 
+def InceptionResnetV2(dictionary):
+    feat = dictionary["inception_resnet_v2"]
+    feats = inception_resnet_v2_feature
+    dists = numpy.linalg.norm(feat - feats, axis=-1)
+    return dists
+
 def ResNet50Class(dictionary):
     feat = dictionary["resnet50_cl"]
     feats = resnet_class_feature
@@ -144,6 +152,22 @@ def Vgg16Class(dictionary):
 def Vgg19Class(dictionary):
     feat = dictionary["vgg19_cl"]
     feats = vgg19_class_feature
+
+    # prendo 5 indice piu alto
+    indexes_class = numpy.squeeze(numpy.argsort(feat, axis=-1))[-5:]
+    # fill distanze
+    # TODO qualcuno sistemi questo vi prego
+    dists = 1000 + numpy.linalg.norm(feat - feats, axis=-1)
+
+    # non ho trovato un modo di farlo senza for
+    for j in xrange(len(dists)):
+        if numpy.argmax(feats[j]) in indexes_class:
+            dists[j] = numpy.linalg.norm(feat - feats[j:j + 1])
+    return dists
+
+def InceptionResnetV2Class(dictionary):
+    feat = dictionary["inception_resnet_v2_cl"]
+    feats = inception_resnet_v2_class_feature
 
     # prendo 5 indice piu alto
     indexes_class = numpy.squeeze(numpy.argsort(feat, axis=-1))[-5:]
